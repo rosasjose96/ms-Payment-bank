@@ -70,8 +70,7 @@ public class PaymentHandler {
     public Mono<ServerResponse> newPayment(ServerRequest request){
 
         Mono<Payment> paymentMono = request.bodyToMono(Payment.class);
-        String contractNumber = request.pathVariable("contractNumber");
-        return paymentMono.flatMap( paymentRequest -> creditService.findCredit(contractNumber)
+        return paymentMono.flatMap( paymentRequest -> creditService.findCredit(paymentRequest.getIdentityNumber())
                 .flatMap(credit -> {
                 credit.setAmount(credit.getAmount() - paymentRequest.getAmount());
                 return creditService.updateCredit(credit);
@@ -79,6 +78,7 @@ public class PaymentHandler {
                             TransactionDTO transaction = new TransactionDTO();
                             transaction.setTypeoftransaction("PAYMENT");
                             transaction.setTransactionAmount(paymentRequest.getAmount());
+                            transaction.setCustomerIdentityNumber(paymentRequest.getCustomerIdentityNumber());
                             transaction.setIdentityNumber(paymentRequest.getIdentityNumber());
                             return transactionService.saveTransaction(transaction);
                         }).flatMap(payment ->  {

@@ -26,7 +26,7 @@ public class RouterConfig {
 
         return route(GET("/api/payment"), paymentHandler::findAll)
                 .andRoute(GET("/api/payment/{id}"), paymentHandler::findPayment)
-                .andRoute(POST("/api/payment/{id}"), paymentHandler::newPayment)
+                .andRoute(POST("/api/payment"), paymentHandler::newPayment)
                 .andRoute(PUT("/api/payment/{id}"), paymentHandler::updatePayment)
                 .andRoute(DELETE("/api/payment/{id}"), paymentHandler::deletePayment);
 
